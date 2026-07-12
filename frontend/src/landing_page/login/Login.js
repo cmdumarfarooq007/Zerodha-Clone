@@ -3,16 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import OpenAccount from "../OpenAccount";
 
-function Signup() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const handleSignup = async () => {
+  const handleLogin = async () => {
     setError("");
-    setSuccess("");
 
     if (!email || !password) {
       setError("Please fill in all fields");
@@ -20,12 +18,9 @@ function Signup() {
     }
 
     try {
-      const res = await axios.post("http://localhost:3002/signup", {
-        email,
-        password,
-      });
-      setSuccess(res.data.message);
-      setTimeout(() => navigate("/login"), 1500);
+      await axios.post("http://localhost:3002/login", { email, password });
+      localStorage.setItem("user", email);
+      window.location.href = "http://localhost:3001";
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong");
     }
@@ -35,9 +30,9 @@ function Signup() {
     <>
       <div className="container p-5 mt-5">
         <div className="row text-center">
-          <h1 className="fs-2 mb-4">Sign up for a Zerodha account</h1>
+          <h1 className="fs-2 mb-4">Login to Zerodha</h1>
           <p className="text-muted mb-5">
-            Enter your email and password to get started.
+            Enter your email and password to continue.
           </p>
         </div>
         <div className="row justify-content-center">
@@ -45,11 +40,6 @@ function Signup() {
             {error && (
               <div className="alert alert-danger" role="alert">
                 {error}
-              </div>
-            )}
-            {success && (
-              <div className="alert alert-success" role="alert">
-                {success}
               </div>
             )}
             <div className="mb-3">
@@ -81,25 +71,18 @@ function Signup() {
             <div className="d-grid gap-2">
               <button
                 className="btn btn-primary btn-lg"
-                onClick={handleSignup}
+                onClick={handleLogin}
               >
-                Sign up
+                Login
               </button>
             </div>
             <p
               className="text-muted mt-3 text-center"
-              style={{ fontSize: "12px" }}
-            >
-              By signing up, you agree to our Terms and Conditions and Privacy
-              Policy.
-            </p>
-            <p
-              className="text-muted mt-2 text-center"
               style={{ fontSize: "14px" }}
             >
-              Already have an account?{" "}
-              <Link to="/login" style={{ textDecoration: "none" }}>
-                Login
+              Not a user yet?{" "}
+              <Link to="/signup" style={{ textDecoration: "none" }}>
+                Sign up
               </Link>
             </p>
           </div>
@@ -110,4 +93,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;

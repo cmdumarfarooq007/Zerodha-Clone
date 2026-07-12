@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 
-const Menu = () => {
+const Menu = ({ onLogout, user }) => {
   const [selectedMenu, setSelectedMenu] = useState(0);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
@@ -10,12 +10,13 @@ const Menu = () => {
     setSelectedMenu(index);
   };
 
-  const handleProfileClick = (index) => {
+  const handleProfileClick = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
 
   const menuClass = "menu";
   const activeMenuClass = "menu selected";
+  const initials = user ? user.charAt(0).toUpperCase() : "U";
 
   return (
     <div className="menu-container">
@@ -69,7 +70,7 @@ const Menu = () => {
           <li>
             <Link
               style={{ textDecoration: "none" }}
-              to="funds"
+              to="/funds"
               onClick={() => handleMenuClick(4)}
             >
               <p className={selectedMenu === 4 ? activeMenuClass : menuClass}>
@@ -91,9 +92,55 @@ const Menu = () => {
         </ul>
         <hr />
         <div className="profile" onClick={handleProfileClick}>
-          <div className="avatar">ZU</div>
-          <p className="username">USERID</p>
+          <div className="avatar">{initials}</div>
+          <p className="username">{user?.split("@")[0]}</p>
         </div>
+        {isProfileDropdownOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: "60px",
+              right: "20px",
+              background: "#fff",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              borderRadius: "4px",
+              padding: "8px 0",
+              zIndex: 10,
+            }}
+          >
+            <p
+              style={{
+                padding: "8px 20px",
+                fontSize: "0.85rem",
+                color: "#333",
+                cursor: "pointer",
+                margin: 0,
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsProfileDropdownOpen(false);
+              }}
+            >
+              {user}
+            </p>
+            <hr style={{ margin: "4px 0", border: "none", borderTop: "1px solid #eee" }} />
+            <p
+              style={{
+                padding: "8px 20px",
+                fontSize: "0.85rem",
+                color: "#d32f2f",
+                cursor: "pointer",
+                margin: 0,
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onLogout();
+              }}
+            >
+              Logout
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

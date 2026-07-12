@@ -3,10 +3,10 @@ import React from "react";
 import Dashboard from "./Dashboard";
 import TopBar from "./TopBar";
 
-const Home = () => {
+const Home = ({ onLogout, user }) => {
   return (
     <>
-      <TopBar />
+      <TopBar onLogout={onLogout} user={user} />
       <Dashboard />
     </>
   );
