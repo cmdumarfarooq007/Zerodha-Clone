@@ -74,6 +74,16 @@ app.get("/allPositions", async (req, res) => {
   res.json(allPositions);
 });
 
+app.get("/allOrders", async (req, res) => {
+  let allOrders = await OrdersModel.find({});
+  res.json(allOrders);
+});
+
+app.delete("/deleteOrder/:id", async (req, res) => {
+  await OrdersModel.findByIdAndDelete(req.params.id);
+  res.send("Order deleted!");
+});
+
 app.post("/newOrder", async (req, res) => {
   let newOrder = new OrdersModel({
     name: req.body.name,

@@ -2,20 +2,38 @@ import React from "react";
 
 import Menu from "./Menu";
 
+const indices = [
+  {
+    name: "NIFTY 50",
+    value: "22,147.00",
+    change: "+127.60",
+    percent: "+0.58%",
+    isUp: true,
+  },
+  {
+    name: "SENSEX",
+    value: "72,996.31",
+    change: "+405.25",
+    percent: "+0.56%",
+    isUp: true,
+  },
+];
+
 const TopBar = ({ onLogout, user }) => {
   return (
     <div className="topbar-container">
       <div className="indices-container">
-        <div className="nifty">
-          <p className="index">NIFTY 50</p>
-          <p className="index-points">{100.2} </p>
-          <p className="percent"> </p>
-        </div>
-        <div className="sensex">
-          <p className="index">SENSEX</p>
-          <p className="index-points">{100.2}</p>
-          <p className="percent"></p>
-        </div>
+        {indices.map((idx, i) => (
+          <div className={idx.name === "NIFTY 50" ? "nifty" : "sensex"} key={i}>
+            <p className="index">{idx.name}</p>
+            <p className={`index-points ${idx.isUp ? "up" : "down"}`}>
+              {idx.value}
+            </p>
+            <p className={`percent ${idx.isUp ? "up" : "down"}`}>
+              {idx.change} {idx.percent}
+            </p>
+          </div>
+        ))}
       </div>
 
       <Menu onLogout={onLogout} user={user} />

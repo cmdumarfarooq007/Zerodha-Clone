@@ -7,7 +7,7 @@ const Home = ({ onLogout, user }) => {
   return (
     <>
       <TopBar onLogout={onLogout} user={user} />
-      <Dashboard />
+      <Dashboard user={user} />
     </>
   );
 };

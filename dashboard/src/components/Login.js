@@ -23,7 +23,7 @@ const Login = ({ onLogin }) => {
         setSuccess("Account created! You can now log in.");
         setIsSignup(false);
       } else {
-        const res = await axios.post("http://localhost:3002/login", { email, password });
+        await axios.post("http://localhost:3002/login", { email, password });
         localStorage.setItem("user", email);
         onLogin(email);
       }

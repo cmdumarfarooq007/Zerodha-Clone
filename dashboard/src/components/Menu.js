@@ -1,137 +1,66 @@
 import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
-import { Link } from "react-router-dom";
+const menuItems = [
+  { label: "Dashboard", path: "/", index: 0 },
+  { label: "Orders", path: "/orders", index: 1 },
+  { label: "Holdings", path: "/holdings", index: 2 },
+  { label: "Positions", path: "/positions", index: 3 },
+  { label: "Funds", path: "/funds", index: 4 },
+  { label: "Apps", path: "/apps", index: 5 },
+];
 
 const Menu = ({ onLogout, user }) => {
-  const [selectedMenu, setSelectedMenu] = useState(0);
+  const location = useLocation();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
-  const handleMenuClick = (index) => {
-    setSelectedMenu(index);
-  };
-
-  const handleProfileClick = () => {
-    setIsProfileDropdownOpen(!isProfileDropdownOpen);
-  };
-
-  const menuClass = "menu";
-  const activeMenuClass = "menu selected";
   const initials = user ? user.charAt(0).toUpperCase() : "U";
+
+  const getActiveIndex = () => {
+    const item = menuItems.find((m) => m.path === location.pathname);
+    return item ? item.index : 0;
+  };
+
+  const activeIndex = getActiveIndex();
 
   return (
     <div className="menu-container">
-      <img src="logo.png" style={{ width: "50px" }} />
+      <img src="logo.png" style={{ width: "50px" }} alt="logo" />
       <div className="menus">
         <ul>
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/"
-              onClick={() => handleMenuClick(0)}
-            >
-              <p className={selectedMenu === 0 ? activeMenuClass : menuClass}>
-                Dashboard
-              </p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/orders"
-              onClick={() => handleMenuClick(1)}
-            >
-              <p className={selectedMenu === 1 ? activeMenuClass : menuClass}>
-                Orders
-              </p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/holdings"
-              onClick={() => handleMenuClick(2)}
-            >
-              <p className={selectedMenu === 2 ? activeMenuClass : menuClass}>
-                Holdings
-              </p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/positions"
-              onClick={() => handleMenuClick(3)}
-            >
-              <p className={selectedMenu === 3 ? activeMenuClass : menuClass}>
-                Positions
-              </p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/funds"
-              onClick={() => handleMenuClick(4)}
-            >
-              <p className={selectedMenu === 4 ? activeMenuClass : menuClass}>
-                Funds
-              </p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              style={{ textDecoration: "none" }}
-              to="/apps"
-              onClick={() => handleMenuClick(6)}
-            >
-              <p className={selectedMenu === 6 ? activeMenuClass : menuClass}>
-                Apps
-              </p>
-            </Link>
-          </li>
+          {menuItems.map((item) => (
+            <li key={item.index}>
+              <Link
+                style={{ textDecoration: "none" }}
+                to={item.path}
+              >
+                <p
+                  className={
+                    activeIndex === item.index ? "menu selected" : "menu"
+                  }
+                >
+                  {item.label}
+                </p>
+              </Link>
+            </li>
+          ))}
         </ul>
         <hr />
-        <div className="profile" onClick={handleProfileClick}>
+        <div
+          className="profile"
+          onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+        >
           <div className="avatar">{initials}</div>
           <p className="username">{user?.split("@")[0]}</p>
         </div>
         {isProfileDropdownOpen && (
-          <div
-            style={{
-              position: "absolute",
-              top: "60px",
-              right: "20px",
-              background: "#fff",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              borderRadius: "4px",
-              padding: "8px 0",
-              zIndex: 10,
-            }}
-          >
-            <p
-              style={{
-                padding: "8px 20px",
-                fontSize: "0.85rem",
-                color: "#333",
-                cursor: "pointer",
-                margin: 0,
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsProfileDropdownOpen(false);
-              }}
-            >
+          <div className="profile-dropdown">
+            <p className="profile-email" onClick={() => setIsProfileDropdownOpen(false)}>
               {user}
             </p>
             <hr style={{ margin: "4px 0", border: "none", borderTop: "1px solid #eee" }} />
             <p
-              style={{
-                padding: "8px 20px",
-                fontSize: "0.85rem",
-                color: "#d32f2f",
-                cursor: "pointer",
-                margin: 0,
-              }}
+              className="profile-logout"
               onClick={(e) => {
                 e.stopPropagation();
                 onLogout();
